@@ -69,9 +69,7 @@ def test_escaped_tilde_key(doc: dict[str, Any]) -> None:
         ("/ ", 7),
     ],
 )
-def test_rfc_examples(
-    doc: dict[str, Any], pointer: str, expected: int
-) -> None:
+def test_rfc_examples(doc: dict[str, Any], pointer: str, expected: int) -> None:
     assert resolve(doc, pointer) == expected
 
 

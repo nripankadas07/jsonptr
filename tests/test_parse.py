@@ -13,7 +13,6 @@ from jsonptr import (
     unescape,
 )
 
-
 # ---------------------------------------------------------------------------
 # escape / unescape
 # ---------------------------------------------------------------------------
@@ -108,6 +107,11 @@ def test_parse_rejects_trailing_tilde_in_token() -> None:
 
 def test_format_pointer_empty_yields_empty_string() -> None:
     assert format_pointer([]) == ""
+
+
+def test_format_pointer_rejects_bare_string() -> None:
+    with pytest.raises(TypeError, match="not str"):
+        format_pointer("foo")
 
 
 def test_format_pointer_rejects_non_string_token() -> None:

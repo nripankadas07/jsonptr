@@ -7,8 +7,6 @@ or pick out the specific subclass.
 
 from __future__ import annotations
 
-from typing import Optional
-
 
 class JsonPointerError(ValueError):
     """Base class for every :mod:`jsonptr` failure."""
@@ -49,7 +47,7 @@ class ResolutionError(JsonPointerError):
         self,
         pointer: str,
         path: tuple[str, ...],
-        token: Optional[str],
+        token: str | None,
         detail: str,
     ) -> None:
         self.pointer = pointer
@@ -57,8 +55,7 @@ class ResolutionError(JsonPointerError):
         self.token = token
         self.detail = detail
         super().__init__(
-            f"cannot resolve {pointer!r} at "
-            f"{format_path(path)!r}: {detail}"
+            f"cannot resolve {pointer!r} at {format_path(path)!r}: {detail}"
         )
 
 
@@ -67,7 +64,5 @@ def format_path(path: tuple[str, ...]) -> str:
 
     if not path:
         return ""
-    parts = []
-    for token in path:
-        parts.append(token.replace("~", "~0").replace("/", "~1"))
+    parts = [token.replace("~", "~0").replace("/", "~1") for token in path]
     return "/" + "/".join(parts)

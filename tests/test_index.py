@@ -22,9 +22,7 @@ from jsonptr._index import (
         ("999999", 999999),
     ],
 )
-def test_parse_array_index_accepts_canonical_digits(
-    token: str, expected: int
-) -> None:
+def test_parse_array_index_accepts_canonical_digits(token: str, expected: int) -> None:
     assert parse_array_index(token) == expected
 
 

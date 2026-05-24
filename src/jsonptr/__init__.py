@@ -13,6 +13,8 @@ structures using a compact pointer syntax::
 Public surface:
 
 * :func:`parse`, :func:`format_pointer` — string ↔ token tuple.
+* :func:`parse_uri_fragment`, :func:`format_uri_fragment` — RFC 6901
+  URI-fragment form.
 * :func:`escape`, :func:`unescape` — single-token transforms.
 * :func:`resolve`, :func:`get`, :func:`has` — read access.
 * :func:`set_value`, :func:`remove` — in-place mutation.
@@ -29,7 +31,14 @@ from ._errors import (
     ResolutionError,
 )
 from ._index import END_OF_ARRAY
-from ._parse import escape, format_pointer, parse, unescape
+from ._parse import (
+    escape,
+    format_pointer,
+    format_uri_fragment,
+    parse,
+    parse_uri_fragment,
+    unescape,
+)
 from ._resolve import get, has, remove, resolve, set_value, to_pointer
 
 __all__ = [
@@ -39,9 +48,11 @@ __all__ = [
     "ResolutionError",
     "escape",
     "format_pointer",
+    "format_uri_fragment",
     "get",
     "has",
     "parse",
+    "parse_uri_fragment",
     "remove",
     "resolve",
     "set_value",

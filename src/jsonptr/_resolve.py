@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import Any
 
 from ._errors import ResolutionError
 from ._index import is_end_of_array, parse_array_index
 from ._parse import format_pointer, parse
-
 
 _MISSING = object()
 
@@ -52,9 +51,7 @@ def _step_list(
 ) -> Any:
     if is_end_of_array(token):
         raise _fail(pointer, path, token, "'-' is not a readable index")
-    index = _check_list_index(
-        container, token, pointer=pointer, path=path
-    )
+    index = _check_list_index(container, token, pointer=pointer, path=path)
     return container[index]
 
 
@@ -68,16 +65,12 @@ def _step(
     """Descend one token; raise :class:`ResolutionError` on failure."""
 
     if isinstance(container, list):
-        return _step_list(
-            container, token, pointer=pointer, path=path
-        )
+        return _step_list(container, token, pointer=pointer, path=path)
     if isinstance(container, dict):
         if token not in container:
             raise _fail(pointer, path, token, "key not found in object")
         return container[token]
-    raise _fail(
-        pointer, path, token, f"cannot traverse {type(container).__name__}"
-    )
+    raise _fail(pointer, path, token, f"cannot traverse {type(container).__name__}")
 
 
 def resolve(document: Any, pointer: str) -> Any:
@@ -91,15 +84,11 @@ def resolve(document: Any, pointer: str) -> Any:
     return _walk_for_get(document, tokens, pointer)
 
 
-def _walk_for_get(
-    document: Any, tokens: tuple[str, ...], pointer: str
-) -> Any:
+def _walk_for_get(document: Any, tokens: tuple[str, ...], pointer: str) -> Any:
     current: Any = document
     walked: list[str] = []
     for token in tokens:
-        current = _step(
-            current, token, pointer=pointer, path=tuple(walked)
-        )
+        current = _step(current, token, pointer=pointer, path=tuple(walked))
         walked.append(token)
     return current
 
@@ -162,9 +151,7 @@ def _assign(
     path: tuple[str, ...],
 ) -> None:
     if isinstance(parent, list):
-        _assign_list(
-            parent, token, value, pointer=pointer, path=path
-        )
+        _assign_list(parent, token, value, pointer=pointer, path=path)
         return
     if isinstance(parent, dict):
         parent[token] = value
@@ -178,16 +165,16 @@ def _assign(
 
 
 def set_value(
-    document: Union[dict[str, Any], list[Any]],
+    document: dict[str, Any] | list[Any],
     pointer: str,
     value: Any,
 ) -> None:
     """Set ``value`` at ``pointer`` inside ``document`` in place.
 
-    For lists, the final token may be the ``-`` marker, in which
-    case ``value`` is appended. Otherwise the final token must
-    address an existing position; this function does NOT auto-create
-    intermediate containers.
+    For lists, the final token may be the ``-`` marker or the index
+    equal to the list length, in which case ``value`` is appended.
+    Otherwise the final token must address an existing position; this
+    function does NOT auto-create intermediate containers.
     """
 
     tokens = parse(pointer)
@@ -207,9 +194,7 @@ def _pop_list(
 ) -> Any:
     if is_end_of_array(token):
         raise _fail(pointer, path, token, "'-' is not a removable index")
-    index = _check_list_index(
-        parent, token, pointer=pointer, path=path
-    )
+    index = _check_list_index(parent, token, pointer=pointer, path=path)
     return parent.pop(index)
 
 
@@ -226,14 +211,10 @@ def _pop(
         if token not in parent:
             raise _fail(pointer, path, token, "key not found in object")
         return parent.pop(token)
-    raise _fail(
-        pointer, path, token, f"cannot remove from {type(parent).__name__}"
-    )
+    raise _fail(pointer, path, token, f"cannot remove from {type(parent).__name__}")
 
 
-def remove(
-    document: Union[dict[str, Any], list[Any]], pointer: str
-) -> Any:
+def remove(document: dict[str, Any] | list[Any], pointer: str) -> Any:
     """Remove the value at ``pointer`` and return it.
 
     The root document cannot be removed (raises

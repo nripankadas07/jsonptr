@@ -2,21 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Optional
-
-
 END_OF_ARRAY = "-"
 
 
-def parse_array_index(token: str) -> Optional[int]:
+def parse_array_index(token: str) -> int | None:
     """Return the integer index represented by ``token`` or ``None``.
 
     Returns ``None`` if the token cannot be a valid array index.
     Per RFC 6901 §4, the index token must be either ``0`` or a
-    non-empty string of digits with no leading zero. The special
-    ``-`` token is reserved for the "one past the end" position
-    and is not handled here — call sites must check for it
-    explicitly before invoking :func:`parse_array_index`.
+    non-empty string of digits with no leading zero. The ``-`` token
+    denotes the "one past the end" position and is intentionally not
+    handled here; call sites must decide whether that operation can
+    use it.
     """
 
     if token == "":
