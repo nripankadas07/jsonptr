@@ -16,7 +16,7 @@ descriptive errors and a fully typed surface.
 ## Install
 
 ```bash
-pip install jsonptr
+python -m pip install -e .
 ```
 
 The package has zero runtime dependencies and supports Python 3.9+.
